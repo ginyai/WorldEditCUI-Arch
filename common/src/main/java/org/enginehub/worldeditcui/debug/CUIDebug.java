@@ -1,6 +1,6 @@
 package org.enginehub.worldeditcui.debug;
 
-import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.Minecraft;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Appender;
 import org.apache.logging.log4j.core.Layout;
@@ -24,7 +24,7 @@ import java.nio.file.Path;
  */
 public final class CUIDebug implements InitialisationFactory
 {
-	private static final boolean LOG_ALL_ERRORS = Boolean.getBoolean("wecui.debug.logall") || FabricLoader.getInstance().isDevelopmentEnvironment();
+	private static final boolean LOG_ALL_ERRORS = Boolean.getBoolean("wecui.debug.logall");
 	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger("WorldEditCUI");
 	
 	private final WorldEditCUI controller;
@@ -41,7 +41,7 @@ public final class CUIDebug implements InitialisationFactory
 		// Create a logger that logs to console (if in debug mode), and logs to a debug file
 		final Logger loggerImpl = (Logger) LogManager.getLogger("WorldEditCUI");
 
-		final Path debugFile = FabricLoader.getInstance().getGameDir().resolve("worldeditcui.debug.log");
+		final Path debugFile = Minecraft.getInstance().gameDirectory.toPath().resolve("worldeditcui.debug.log");
 
 		// Apply defined layout from MC's configured file appender, if possible
 		Layout<?> layout = null;

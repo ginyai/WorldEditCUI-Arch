@@ -20,9 +20,19 @@ configurations {
     developmentForge.extendsFrom common
 }
 
+repositories {
+    maven {
+        url "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
+}
+
 dependencies {
     forge "net.minecraftforge:forge:${rootProject.forge_version}"
-    modApi "dev.architectury:architectury-forge:9.1.12"
+
+    modApi "curse.maven:worldedit-225608:4586218"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }

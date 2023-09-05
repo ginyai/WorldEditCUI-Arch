@@ -2,7 +2,7 @@ package org.enginehub.worldeditcui.forge;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.architectury.networking.NetworkManager;
+import com.mojang.blaze3d.vertex.PoseStack;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import net.minecraft.client.KeyMapping;
@@ -18,6 +18,7 @@ import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.network.NetworkEvent;
 import org.enginehub.worldeditcui.WorldEditCUI;
 import org.enginehub.worldeditcui.config.CUIConfiguration;
 import org.enginehub.worldeditcui.event.listeners.CUIListenerChannel;
@@ -61,8 +62,6 @@ public class WorldEditCUIForgeClient {
     private boolean visible = true;
     private int delayedHelo = 0;
 
-    private static final List<Lazy<KeyMapping>> mappingsToRegister = new ArrayList<>();
-
     /**
      * Register a key binding
      *
@@ -72,11 +71,12 @@ public class WorldEditCUIForgeClient {
      * @return new, registered keybinding in the mod category
      */
     private static Lazy<KeyMapping> key(final String name, final InputConstants.Type type, final int code) {
-        Lazy<KeyMapping> mapping = Lazy.of(() -> new KeyMapping("key." + MOD_ID + '.' + name, type, code, KEYBIND_CATEGORY_WECUI));
-        mappingsToRegister.add(mapping);
-        return mapping;
+        return Lazy.of(() -> new KeyMapping("key." + MOD_ID + '.' + name, type, code, KEYBIND_CATEGORY_WECUI));
     }
 
+    static {
+        new WorldEditCUIForgeClient().onInitialize();
+    }
 
     public void onInitialize() {
         if (Boolean.getBoolean("wecui.debug.mixinaudit")) {
@@ -86,22 +86,17 @@ public class WorldEditCUIForgeClient {
         instance = this;
 
         // Set up event listeners
-        CUINetworking.subscribeToCuiPacket(this::onPluginMessage);
+        // CUINetworking.subscribeToCuiPacket(this::onPluginMessage);
     }
 
 
     public static class ModEventBusListener {
-        @SubscribeEvent
-        public static void onClientSetupEvent(FMLClientSetupEvent event) {
-            new WorldEditCUIForgeClient().onInitialize();
-        }
 
         @SubscribeEvent
-        public void registerBindings(RegisterKeyMappingsEvent event) {
-            for (Lazy<KeyMapping> mapping : mappingsToRegister) {
-                event.register(mapping.get());
-            }
-            mappingsToRegister.clear();
+        public static void registerBindings(RegisterKeyMappingsEvent event) {
+            event.register(instance.keyBindToggleUI.get());
+            event.register(instance.keyBindChunkBorder.get());
+            event.register(instance.keyBindClearSel.get());
         }
     }
 
@@ -126,31 +121,9 @@ public class WorldEditCUIForgeClient {
             if (instance.controller == null) return;
             if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_PARTICLES) {
                 boolean advancedTranslucency = ((LevelRendererAccessor)event.getLevelRenderer()).getTransparencyChain() != null;
-                if (advancedTranslucency) {
-                    try {
-                        RenderSystem.getModelViewStack().pushPose();
-                        RenderSystem.getModelViewStack().mulPoseMatrix(event.getPoseStack().last().pose());
-                        RenderSystem.applyModelViewMatrix();
-                        event.getLevelRenderer().getTranslucentTarget().bindWrite(false);
-                        getInstance().onPostRenderEntities(event.getPartialTick());
-                    } finally {
-                        Minecraft.getInstance().getMainRenderTarget().bindWrite(false);
-                        RenderSystem.getModelViewStack().popPose();
-                    }
-                }
+
             } else if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_LEVEL) {
-                boolean advancedTranslucency = ((LevelRendererAccessor)event.getLevelRenderer()).getTransparencyChain() != null;
-                if (!advancedTranslucency) {
-                    try {
-                        RenderSystem.getModelViewStack().pushPose();
-                        RenderSystem.getModelViewStack().mulPoseMatrix(event.getPoseStack().last().pose());
-                        RenderSystem.applyModelViewMatrix();
-                        getInstance().onPostRenderEntities(event.getPartialTick());
-                    } finally {
-                        RenderSystem.getModelViewStack().popPose();
-                        RenderSystem.applyModelViewMatrix();
-                    }
-                }
+
             }
         }
     }
@@ -203,7 +176,7 @@ public class WorldEditCUIForgeClient {
         }
     }
 
-    private void onPluginMessage(FriendlyByteBuf data, NetworkManager.PacketContext context) {
+    public void onPluginMessage(FriendlyByteBuf data) {
         try {
             final int readableBytes = data.readableBytes();
             if (readableBytes > 0) {
@@ -233,6 +206,37 @@ public class WorldEditCUIForgeClient {
     public void onPostRenderEntities(float tickDelta) {
         if (this.visible) {
             this.worldRenderListener.onRender(tickDelta);
+        }
+    }
+
+    public void onWorldRenderEventAfterTranslucent(PoseStack poseStack, float partialTick, boolean advancedTranslucency) {
+        if (controller == null) return;
+        if (advancedTranslucency) {
+            try {
+                RenderSystem.getModelViewStack().pushPose();
+                RenderSystem.getModelViewStack().mulPoseMatrix(poseStack.last().pose());
+                RenderSystem.applyModelViewMatrix();
+                Minecraft.getInstance().levelRenderer.getTranslucentTarget().bindWrite(false);
+                getInstance().onPostRenderEntities(partialTick);
+            } finally {
+                Minecraft.getInstance().getMainRenderTarget().bindWrite(false);
+                RenderSystem.getModelViewStack().popPose();
+            }
+        }
+    }
+
+    public void onWorldRenderEventLast(PoseStack poseStack, float partialTick, boolean advancedTranslucency) {
+        if (controller == null) return;
+        if (!advancedTranslucency) {
+            try {
+                RenderSystem.getModelViewStack().pushPose();
+                RenderSystem.getModelViewStack().mulPoseMatrix(poseStack.last().pose());
+                RenderSystem.applyModelViewMatrix();
+                getInstance().onPostRenderEntities(partialTick);
+            } finally {
+                RenderSystem.getModelViewStack().popPose();
+                RenderSystem.applyModelViewMatrix();
+            }
         }
     }
 
