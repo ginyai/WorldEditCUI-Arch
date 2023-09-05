@@ -1,0 +1,21 @@
+{
+    "worldeditcui.options.title": "WorldEditCUI选项",
+    "key.worldeditcui.toggle": "显示/隐藏 WECUI",
+    "key.worldeditcui.clear": "取消WorldEdit选择区域",
+    "key.categories.worldeditcui": "WorldEditCUI按键设置",
+    "worldeditcui.color.cuboidedge": "长方体边缘颜色",
+    "worldeditcui.color.cuboidgrid": "长方体网格颜色",
+    "worldeditcui.color.cuboidpoint1": "长方体第一点颜色",
+    "worldeditcui.color.cuboidpoint2": "长方体第二点颜色",
+    "worldeditcui.color.polygrid": "多边形网格颜色",
+    "worldeditcui.color.polyedge": "多边形边缘颜色",
+    "worldeditcui.color.polypoint": "多边形点颜色",
+    "worldeditcui.color.ellipsoidgrid": "椭球形网格颜色",
+    "worldeditcui.color.ellipsoidpoint": "椭球形中心点颜色",
+    "worldeditcui.color.cylindergrid": "圆柱形网格颜色",
+    "worldeditcui.color.cylinderedge": "圆柱形边缘颜色",
+    "worldeditcui.color.cylinderpoint": "圆柱形中心点颜色",
+    "worldeditcui.options.compat.title": "兼容性选项",
+    "worldeditcui.options.compat.spammy": "混杂模式(始终发送/we cui命令)",
+    "worldeditcui.options.color.title": "显示颜色"
+}

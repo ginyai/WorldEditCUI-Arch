@@ -1,11 +1,14 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "org.enginehub.worldeditcui.mixin.forge",
+  "package": "org.enginehub.worldeditcui.forge.mixins",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
   ],
   "client": [
+    "LevelRendererAccessor",
+    "MinecraftAccess",
+    "MinecraftMixin"
   ],
   "injectors": {
     "defaultRequire": 1

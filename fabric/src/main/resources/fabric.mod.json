@@ -27,8 +27,7 @@
     ]
   },
   "mixins": [
-    "worldeditcui.mixins.json",
-    "worldeditcui-common.mixins.json"
+    "worldeditcui.mixins.json"
   ],
   "depends": {
     "fabric-api-base": "*",

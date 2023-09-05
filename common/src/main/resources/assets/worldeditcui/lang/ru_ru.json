@@ -1,0 +1,21 @@
+{
+    "worldeditcui.options.title": "Настройки WorldEditCUI",
+    "key.worldeditcui.toggle": "Переключить видимость CUI",
+    "key.worldeditcui.clear": "Очистить выделение WorldEdit",
+    "key.categories.worldeditcui": "WorldEditCUI",
+    "worldeditcui.color.cuboidedge": "Цвет границ кубоида",
+    "worldeditcui.color.cuboidgrid": "Цвет сетки кубоида",
+    "worldeditcui.color.cuboidpoint1": "Цвет первой точки кубоида",
+    "worldeditcui.color.cuboidpoint2": "Цвет второй точки кубоида",
+    "worldeditcui.color.polygrid": "Цвет сетки многоугольника",
+    "worldeditcui.color.polyedge": "Цвет границ многоугольника",
+    "worldeditcui.color.polypoint": "Цвет точки многоугольника",
+    "worldeditcui.color.ellipsoidgrid": "Цвет сетки эллипсоида",
+    "worldeditcui.color.ellipsoidpoint": "Цвет центральной точки эллипсоида",
+    "worldeditcui.color.cylindergrid": "Цвет сетки цилиндра",
+    "worldeditcui.color.cylinderedge": "Цвет границ цилиндра",
+    "worldeditcui.color.cylinderpoint": "Цвет центральной точки цилиндра",
+    "worldeditcui.options.compat.title": "Настройки совместимости",
+    "worldeditcui.options.compat.spammy": "Неразборчивый режим (отправлять /we cui всё время)",
+    "worldeditcui.options.color.title": "Отображение цветов"
+}
