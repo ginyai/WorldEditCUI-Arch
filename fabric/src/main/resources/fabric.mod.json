@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "worldeditcui",
+  "version": "${version}",
+
+  "name": "WorldEditCUI",
+  "description": "Client-side user interface for WorldEdit",
+  "authors": [
+    "lahwran",
+    "yetanotherx",
+    "Mumfrey",
+    "TomyLobo",
+    "mikroskeem",
+    "Zbx1425"
+  ],
+  "contact": {
+    "homepage": "https://github.com/EngineHub/WorldEditCUI",
+    "sources": "https://github.com/EngineHub/WorldEditCUI"
+  },
+  "icon": "assets/worldeditcui/icon.png",
+  "license": "EPL-1.0",
+
+  "environment": "client",
+  "entrypoints": {
+    "main": [
+      "org.enginehub.worldeditcui.fabric.WorldEditCUIFabric"
+    ]
+  },
+  "mixins": [
+    "worldeditcui.mixins.json"
+  ],
+  "depends": {
+    "fabric-api-base": "*",
+    "minecraft": ">=1.19.1"
+  },
+  "suggests": {
+    "worldedit": ">=7.2.0"
+  }
+}
